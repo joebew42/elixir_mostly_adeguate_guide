@@ -72,7 +72,7 @@ defmodule Chapter1Test do
       assert add.(multiply.(flock_b, flock_a), multiply.(flock_a, flock_b)) == 16
 
       # apply the distributive property
-      assert multiply.(flock_b, add.(flock_a, flock_a))
+      assert multiply.(flock_b, add.(flock_a, flock_a)) == 16
     end
   end
 end
