@@ -1,4 +1,4 @@
-defmodule Chapter1Test do
+defmodule Chapter1WhatEverAreWeDoingTest do
   use ExUnit.Case, async: true
 
   describe "A brief encounter." do
