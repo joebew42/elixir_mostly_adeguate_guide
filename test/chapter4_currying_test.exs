@@ -16,9 +16,9 @@ defmodule Chapter4CurryingTest do
   end
 
   test "curry" do
-    curried = curry(fn a, b -> a + b end)
+    curried = curry(fn a, b -> a - b end)
 
-    assert curried.(1).(1) == 2
+    assert curried.(3).(1) == 2
   end
 
   # http://blog.patrikstorm.com/function-currying-in-elixir
@@ -27,7 +27,7 @@ defmodule Chapter4CurryingTest do
     curry(function, arity, [])
   end
 
-  defp curry(function, 0, arguments), do:
+  defp curry(function, 0, arguments) do
     apply(function, Enum.reverse(arguments))
   end
   defp curry(function, arity, arguments) do
