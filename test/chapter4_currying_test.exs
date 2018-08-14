@@ -1,6 +1,8 @@
 defmodule Chapter4CurryingTest do
   use ExUnit.Case, async: true
 
+  import Currying
+
   test "add an increment" do
     add = fn a ->
       fn b ->
@@ -45,19 +47,33 @@ defmodule Chapter4CurryingTest do
     assert censored.("Chocolate Rain") == "Ch*c*l*t* R**n"
   end
 
-  # http://blog.patrikstorm.com/function-currying-in-elixir
-  defp curry(function) do
-    {_, arity} = :erlang.fun_info(function, :arity)
-    curry(function, arity, [])
-  end
+  describe "Exercises" do
+    test "Refactor to remove all arguments by partially applying the function" do
+      # words :: String -> [String]
+      # const words = str => split(' ', str);
+      words = &String.split(&1, " ")
 
-  defp curry(function, 0, arguments) do
-    apply(function, Enum.reverse(arguments))
-  end
+      assert words.("hello world") == ["hello", "world"]
 
-  defp curry(function, arity, arguments) do
-    fn argument ->
-      curry(function, arity - 1, [argument | arguments])
+      # filterQs :: [String] -> [String]
+      # const filterQs = xs => filter(x => x.match(/q/i), xs);
+      match = curry(fn what, string -> Regex.match?(what, string) end)
+      filter = curry(fn function, enum -> Enum.filter(enum, function) end)
+
+      has_letter_q? = match.(~r/q/)
+      filter_qs = filter.(has_letter_q?)
+
+      assert filter_qs.(["quack", "duck"]) == ["quack"]
+    end
+
+    test "Refactor `max` to not reference any arguments using the helper function `keepHighest`." do
+      # max :: [Number] -> Number
+      # const max = xs => reduce((acc, x) => (x >= acc ? x : acc), -Infinity, xs);
+      keep_highest = fn a, b -> if a > b, do: a, else: b end
+      reduce = curry(fn function, enum -> Enum.reduce(enum, function) end)
+      max = reduce.(keep_highest)
+
+      assert max.([2, 4, 6, 10, 34, 21, 67, 11, 5]) == 67
     end
   end
 end
