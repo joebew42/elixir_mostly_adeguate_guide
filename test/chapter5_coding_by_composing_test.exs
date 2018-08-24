@@ -28,6 +28,9 @@ defmodule Chapter5CodingByComposingTest do
     end
   end
 
+  describe "Pointfree" do
+  end
+
   def compose(f, g) do
     fn x ->
       f.(g.(x))
