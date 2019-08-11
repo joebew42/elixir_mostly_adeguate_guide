@@ -37,11 +37,40 @@ defmodule Chapter5CodingByComposingTest do
 
       assert snake_case.("my name is Joe") == "my_name_is_joe"
     end
+
+    test "initials" do
+      split = fn delimiter -> fn string -> String.split(string, delimiter) end end
+      head = fn string -> String.at(string, 0) end
+      to_upper_case = fn string -> String.upcase(string) end
+      capital_head = compose(to_upper_case, head)
+      intercalate = fn symbol -> fn elements -> Enum.join(elements, symbol) <> symbol end end
+      initials = compose(intercalate.(". "), compose(map(capital_head), split.(" ")))
+
+      assert split.(" ").("joe brewery bew") == ["joe", "brewery", "bew"]
+      assert head.("joe") == "j"
+      assert capital_head.("joe") == "J"
+      assert intercalate.(". ").(["J", "B", "B"]) == "J. B. B. "
+      assert map(head).(["joe", "brewery", "bew"]) == ["j", "b", "b"]
+      assert initials.("joe brewery bew") == "J. B. B. "
+    end
   end
 
   def compose(f, g) do
     fn x ->
       f.(g.(x))
     end
+  end
+
+  def map(function) do
+    fn elements ->
+      do_map(function, Enum.reverse(elements), [])
+    end
+  end
+
+  defp do_map(_function, [], acc) do
+    acc
+  end
+  defp do_map(function, [head|rest], acc) do
+    do_map(function, rest, [function.(head) | acc])
   end
 end
