@@ -30,7 +30,10 @@ defmodule Chapter5CodingByComposingTest do
 
   describe "Pointfree" do
     test "means that never mention data upon which they operate" do
-      snake_case = fn _nothing -> "my_name_is_joe" end
+      replace = fn pattern, replacement -> fn string -> String.replace(string, pattern, replacement) end end
+      to_lower_case = fn string -> String.downcase(string) end
+
+      snake_case = compose(replace.(~r/\s+/, "_"), to_lower_case)
 
       assert snake_case.("my name is Joe") == "my_name_is_joe"
     end
