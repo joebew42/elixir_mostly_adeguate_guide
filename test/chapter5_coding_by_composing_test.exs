@@ -55,6 +55,12 @@ defmodule Chapter5CodingByComposingTest do
     end
   end
 
+  describe "category theory" do
+    test "TODO" do
+      assert false
+    end
+  end
+
   def compose(f, g) do
     fn x ->
       f.(g.(x))
