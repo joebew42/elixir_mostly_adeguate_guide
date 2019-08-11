@@ -29,6 +29,11 @@ defmodule Chapter5CodingByComposingTest do
   end
 
   describe "Pointfree" do
+    test "means that never mention data upon which they operate" do
+      snake_case = fn _nothing -> "my_name_is_joe" end
+
+      assert snake_case.("my name is Joe") == "my_name_is_joe"
+    end
   end
 
   def compose(f, g) do
