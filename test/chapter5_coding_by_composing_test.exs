@@ -63,6 +63,31 @@ defmodule Chapter5CodingByComposingTest do
 
       assert is_four_letter_word.("SOME")
     end
+
+    test "is_last_in_stock" do
+      cars = [
+        %{
+          name: "Aston Martin One-88",
+          horsepower: 650,
+          dollar_value: 1450000,
+          in_stock: true
+        },
+        %{
+          name: "Aston Martin One-77",
+          horsepower: 750,
+          dollar_value: 1850000,
+          in_stock: true
+        }
+      ]
+
+      reverse = &Enum.reverse/1
+      head = fn [head | _tail] -> head end
+      last = compose(head, reverse)
+      in_stock = fn %{in_stock: in_stock} = _car -> in_stock end
+      is_last_in_stock = compose(in_stock, last)
+
+      assert is_last_in_stock.(cars)
+    end
   end
 
   def compose(f, g) do
