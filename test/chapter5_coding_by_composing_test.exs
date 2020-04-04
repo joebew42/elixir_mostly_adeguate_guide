@@ -56,8 +56,12 @@ defmodule Chapter5CodingByComposingTest do
   end
 
   describe "Category Theory" do
-    test "TODO" do
-      assert false
+    test "is_four_letter_word" do
+      is_four = fn length -> length == 4 end
+      word_length = fn string -> String.length(string) end
+      is_four_letter_word = compose(is_four, word_length)
+
+      assert is_four_letter_word.("SOME")
     end
   end
 
