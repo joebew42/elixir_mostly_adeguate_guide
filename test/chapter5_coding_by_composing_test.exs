@@ -116,6 +116,43 @@ defmodule Chapter5CodingByComposingTest do
 
       assert average_dollar_value.(cars) == (1450000 + 1850000) / 2
     end
+
+    test "fastest_car" do
+      cars = [
+        %{
+          name: "Aston Martin One-88",
+          horsepower: 650,
+          dollar_value: 1450000,
+          in_stock: true
+        },
+        %{
+          name: "Aston Martin One-77",
+          horsepower: 750,
+          dollar_value: 1850000,
+          in_stock: true
+        }
+      ]
+
+      compare_by_horsepower = fn(current_car, car) ->
+        if current_car.horsepower > car.horsepower do
+          current_car
+        else
+          car
+        end
+      end
+      car_with_more_horsepower = reduce(compare_by_horsepower)
+      is_the_fastest = & "#{&1.name} is the fastest"
+
+      fastest_car = compose(is_the_fastest, car_with_more_horsepower)
+
+      assert fastest_car.(cars) == "Aston Martin One-77 is the fastest"
+    end
+  end
+
+  def reduce(reducer) do
+    fn [head|_] = elements ->
+      do_reduce(reducer, head, elements)
+    end
   end
 
   def reduce(reducer, accumulator) do
