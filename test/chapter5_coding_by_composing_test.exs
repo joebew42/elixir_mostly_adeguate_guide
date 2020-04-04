@@ -55,7 +55,7 @@ defmodule Chapter5CodingByComposingTest do
     end
   end
 
-  describe "category theory" do
+  describe "Category Theory" do
     test "TODO" do
       assert false
     end
