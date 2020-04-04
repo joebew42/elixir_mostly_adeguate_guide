@@ -88,6 +88,47 @@ defmodule Chapter5CodingByComposingTest do
 
       assert is_last_in_stock.(cars)
     end
+
+    test "average_dollar_value" do
+      cars = [
+        %{
+          name: "Aston Martin One-88",
+          horsepower: 650,
+          dollar_value: 1450000,
+          in_stock: true
+        },
+        %{
+          name: "Aston Martin One-77",
+          horsepower: 750,
+          dollar_value: 1850000,
+          in_stock: true
+        }
+      ]
+
+      dollar_values = map(& &1.dollar_value)
+      sum_all = reduce(& &1 + &2, 0)
+      total_dollar_values = compose(sum_all, dollar_values)
+
+      divide_by = fn(by) -> fn(x) -> x / by end end
+      divide_by_length_of = compose(divide_by, &length/1)
+
+      average_dollar_value = compose(divide_by_length_of.(cars), total_dollar_values)
+
+      assert average_dollar_value.(cars) == (1450000 + 1850000) / 2
+    end
+  end
+
+  def reduce(reducer, accumulator) do
+    fn elements ->
+      do_reduce(reducer, accumulator, elements)
+    end
+  end
+
+  def do_reduce(_reducer, accumulator, []) do
+    accumulator
+  end
+  def do_reduce(reducer, accumulator, [element | rest]) do
+    do_reduce(reducer, reducer.(element, accumulator), rest)
   end
 
   def compose(f, g) do
